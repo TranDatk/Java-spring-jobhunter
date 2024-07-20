@@ -1,19 +1,28 @@
 package vn.datk.jobhunter.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+import vn.datk.jobhunter.domain.User;
+import vn.datk.jobhunter.dto.UserDTO;
 import vn.datk.jobhunter.service.UserService;
 
-@RequestMapping("${api.prefix}/users")
+@RequestMapping(path = "${apiPrefix}/users")
 @RequiredArgsConstructor
 @RestController
 public class UserController {
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
-    @GetMapping("/")
-    public String getHelloWorld() {
-        return "Hello World (Hỏi Dân IT & Eric)";
+    @PostMapping("/")
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) throws Exception {
+        User user = modelMapper.map(userDTO, User.class);
+        User newUser = this.userService.createUser(user);
+        UserDTO newUserDTO = modelMapper.map(newUser, UserDTO.class);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUserDTO);
     }
 }
