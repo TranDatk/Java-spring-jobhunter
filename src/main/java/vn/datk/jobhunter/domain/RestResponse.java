@@ -1,5 +1,6 @@
 package vn.datk.jobhunter.domain;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data

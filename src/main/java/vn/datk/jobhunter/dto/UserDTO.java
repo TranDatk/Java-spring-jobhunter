@@ -18,7 +18,7 @@ public class UserDTO {
 
     @NotBlank(message = "Phone number is required")
     @Size(min = 5, message = "Phone number must be at least 5 characters")
-    @JsonProperty("phone_number")
+    @JsonProperty("phoneNumber")
     private String phoneNumber;
 
     @NotBlank(message = "Email is required")
@@ -26,25 +26,21 @@ public class UserDTO {
     @JsonProperty("email")
     private String email;
 
-    @NotBlank(message = "Address is required")
+
+    @JsonProperty("address")
     private String address;
 
     @NotBlank(message = "Password cannot be blank")
+    @NotNull(message = "Password cannot be null")
     private String password;
 
-    @JsonProperty("retype_password")
+    @JsonProperty("retypePassword")
     private String retypePassword;
 
-    @JsonProperty("date_of_birth")
+    @JsonProperty("dateOfBirth")
     private Date dateOfBirth;
 
-    @JsonProperty("facebook_account_id")
-    private int facebookAccountId;
-
-    @JsonProperty("google_account_id")
-    private int googleAccountId;
-
-    @NotNull(message = "Role ID is required")
-    @JsonProperty("role_id")
-    private Long roleId;
+//    @NotNull(message = "Role ID is required")
+//    @JsonProperty("roleId")
+//    private Long roleId;
 }
