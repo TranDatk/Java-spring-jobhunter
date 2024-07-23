@@ -3,6 +3,8 @@ package vn.datk.jobhunter.util.error;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,6 +17,14 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalException {
+    @ExceptionHandler(value = {UsernameNotFoundException.class, BadCredentialsException.class})
+    public ResponseEntity<Object> handleSecurityException(Exception ex){
+        RestResponse<Object> res = new RestResponse<Object>();
+        res.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        res.setError(ex.getMessage());
+        res.setMessage("Exception occurs...");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(res);
+    }
     @ExceptionHandler(value = {IdInvalidException.class, DataIntegrityViolationException.class})
     public ResponseEntity<Object> handleIdException(IdInvalidException idInvalidException){
         RestResponse<Object> res = new RestResponse<Object>();
