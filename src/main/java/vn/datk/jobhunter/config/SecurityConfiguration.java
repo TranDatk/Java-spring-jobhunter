@@ -40,9 +40,10 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http, CustomAuthenticationEntryPoint caep) throws Exception {
         http
                 .csrf(c -> c.disable())
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/", "/api/v1/auth/login").permitAll()
+                                .requestMatchers("/api/v1/auth/login", "/").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(

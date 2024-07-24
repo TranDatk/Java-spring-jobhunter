@@ -23,8 +23,8 @@ public class UserController {
     private final UserService userService;
     private final ModelMapper modelMapper;
 
-    @PostMapping("/")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO) throws Exception {
+    @PostMapping("/users")
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) throws Exception {
         User user = modelMapper.map(userDTO, User.class);
         User newUser = this.userService.createUser(user);
         UserDTO newUserDTO = modelMapper.map(newUser, UserDTO.class);
