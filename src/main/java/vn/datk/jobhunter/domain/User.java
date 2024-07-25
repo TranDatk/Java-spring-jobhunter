@@ -1,39 +1,52 @@
 package vn.datk.jobhunter.domain;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.*;
+
+import java.io.Serializable;
 import java.util.Date;
 
-@Data
-@EqualsAndHashCode(callSuper=false)
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name="users")
-public class User extends BaseEntity {
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor
+public class User extends AbstractAuditingEntity<Long> {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "name" ,length = 100, nullable = false)
+    @JsonProperty("name")
     private String name;
 
-    @Column(name = "phoneNumber" ,length = 20, nullable = false)
+    @Column(name = "phone_number" ,length = 20, nullable = false)
+    @NotBlank(message = "Phone number is required")
+    @Size(min = 5, message = "Phone number must be at least 5 characters")
+    @JsonProperty("phoneNumber")
     private String phoneNumber;
 
     @Column(name = "email" ,length = 50, nullable = false)
+    @NotBlank(message = "Email is required")
+    @NotNull(message = "Email cannot be null")
+    @Email(message="Please provide a valid email address")
+    @JsonProperty("email")
     private String email;
 
     @Column(name = "address" ,length = 200)
+    @JsonProperty("address")
     private String address;
 
     @Column(name = "password" ,length = 200)
+    @NotBlank(message = "Password cannot be blank")
+    @NotNull(message = "Password cannot be null")
     private String password;
 
-    @Column(name = "isActive")
+    @Column(name = "is_active")
     private boolean isActive;
 
-    @Column(name = "dateOfBirth")
+    @Column(name = "date_of_birth")
     private Date dateOfBirth;
 }

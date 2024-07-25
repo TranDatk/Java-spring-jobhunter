@@ -1,4 +1,4 @@
-package vn.datk.jobhunter.dto;
+package vn.datk.jobhunter.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;

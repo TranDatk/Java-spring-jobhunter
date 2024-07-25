@@ -1,4 +1,4 @@
-package vn.datk.jobhunter.service;
+package vn.datk.jobhunter.service.override;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import vn.datk.jobhunter.service.UserService;
 
 import java.util.Collections;
 

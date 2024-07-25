@@ -5,7 +5,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.datk.jobhunter.domain.User;
-import vn.datk.jobhunter.dto.UserDTO;
 import vn.datk.jobhunter.repository.UserRepository;
 
 @RequiredArgsConstructor
