@@ -1,4 +1,4 @@
-package vn.datk.jobhunter.util;
+package vn.datk.jobhunter.util.response;
 
 import org.springframework.data.domain.Page;
 import vn.datk.jobhunter.domain.response.MetaResponse;
@@ -12,7 +12,7 @@ public class FormatResultPagaination {
         mr.setPage(page.getNumber() + 1);
         mr.setPageSize(page.getSize());
         mr.setPages(page.getTotalPages());
-        mr.setTotal(page.getTotalElements());  // Sửa từ getNumberOfElements() thành getTotalElements()
+        mr.setTotal(page.getTotalElements());
 
         rs.setMeta(mr);
         rs.setResult(page.getContent());

@@ -1,4 +1,4 @@
-package vn.datk.jobhunter.util;
+package vn.datk.jobhunter.util.response;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.MethodParameter;
@@ -9,6 +9,7 @@ import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import vn.datk.jobhunter.domain.RestResponse;
+import vn.datk.jobhunter.util.annotation.ApiMessage;
 
 @RestControllerAdvice
 public class FormatRestResponse implements ResponseBodyAdvice<Object> {
@@ -38,7 +39,8 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
             return body;
         }else{
             res.setData(body);
-            res.setMessage("call api");
+            ApiMessage message = returnType.getMethodAnnotation(ApiMessage.class);
+            res.setMessage(message != null ? message.value() : "Call api success");
         }
         return res;
     }

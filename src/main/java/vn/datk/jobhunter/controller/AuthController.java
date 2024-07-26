@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import vn.datk.jobhunter.domain.dto.LoginDTO;
 import vn.datk.jobhunter.domain.response.LoginResponse;
 import vn.datk.jobhunter.service.SecurityService;
+import vn.datk.jobhunter.util.annotation.ApiMessage;
 
 @RequestMapping(path = "${apiPrefix}/auth")
 @RestController
@@ -22,6 +23,7 @@ public class AuthController {
     private final SecurityService securityService;
 
     @PostMapping(path = "/login")
+    @ApiMessage("Login by credential")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginDTO loginDTO){
         UsernamePasswordAuthenticationToken authenticationToken
                 = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());

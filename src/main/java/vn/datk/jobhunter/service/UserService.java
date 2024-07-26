@@ -4,15 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.datk.jobhunter.domain.User;
-import vn.datk.jobhunter.domain.response.MetaResponse;
 import vn.datk.jobhunter.domain.response.ResultPaginationResponse;
 import vn.datk.jobhunter.repository.UserRepository;
-import vn.datk.jobhunter.util.FormatResultPagaination;
-
-import java.util.List;
+import vn.datk.jobhunter.util.response.FormatResultPagaination;
 
 @RequiredArgsConstructor
 @Service
@@ -40,8 +38,8 @@ public class UserService {
         return userRepository.findByEmail(username);
     }
 
-    public ResultPaginationResponse getAllUser(Pageable pageable){
-        Page<User> userPage = this.userRepository.findAll(pageable);
+    public ResultPaginationResponse getAllUser(Pageable pageable, Specification<User> spec){
+        Page<User> userPage = this.userRepository.findAll(spec, pageable);
         ResultPaginationResponse response = FormatResultPagaination.createPaginationResponse(userPage);
 
         return response;

@@ -3,14 +3,13 @@ package vn.datk.jobhunter.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import vn.datk.jobhunter.domain.Company;
-import vn.datk.jobhunter.domain.User;
 import vn.datk.jobhunter.domain.response.ResultPaginationResponse;
 import vn.datk.jobhunter.repository.CompanyRepository;
-import vn.datk.jobhunter.util.FormatResultPagaination;
+import vn.datk.jobhunter.util.response.FormatResultPagaination;
 
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -22,8 +21,8 @@ public class CompanyService {
         return companyRepository.save(company);
     }
 
-    public ResultPaginationResponse getAllCompany(Pageable pageable){
-        Page<Company> companyPage = companyRepository.findAll(pageable);
+    public ResultPaginationResponse getAllCompany(Pageable pageable, Specification<Company> spec){
+        Page<Company> companyPage = companyRepository.findAll(spec,pageable);
         ResultPaginationResponse response = FormatResultPagaination.createPaginationResponse(companyPage);
         return response;
     }

@@ -1,15 +1,19 @@
 package vn.datk.jobhunter.controller;
 
+import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.datk.jobhunter.domain.Company;
+import vn.datk.jobhunter.domain.User;
 import vn.datk.jobhunter.domain.response.ResultPaginationResponse;
 import vn.datk.jobhunter.service.CompanyService;
+import vn.datk.jobhunter.util.annotation.ApiMessage;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,25 +26,24 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @PostMapping("")
+    @ApiMessage("Create a company")
     public ResponseEntity<Company> createCompany(@Valid @RequestBody Company company){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(this.companyService.createCompany(company));
     }
 
     @GetMapping("")
+    @ApiMessage("Fetch all company data")
     public ResponseEntity<ResultPaginationResponse> getAllCompany(
-            @RequestParam("current") Optional<Integer> current,
-            @RequestParam("pageSize") Optional<Integer> pageSize
+            @Filter Specification<Company> spec,
+            Pageable pageable
     ){
-        Pageable pageable = PageRequest.of(
-                current.isPresent() ? current.get() - 1 : 0,
-                pageSize.isPresent() ? pageSize.get() : 5
-        );
         return ResponseEntity.status(HttpStatus.OK)
-                .body(this.companyService.getAllCompany(pageable));
+                .body(this.companyService.getAllCompany(pageable, spec));
     }
 
     @PutMapping("/{id}")
+    @ApiMessage("Update a company")
     public ResponseEntity<Company> updateCompany(
             @PathVariable("id") Long id,
             @Valid @RequestBody Company company
@@ -49,6 +52,7 @@ public class CompanyController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiMessage("Delete a company")
     public ResponseEntity<Void> deleteCompany(
             @PathVariable("id") Long id
     ){
