@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.datk.jobhunter.domain.dto.LoginDTO;
-import vn.datk.jobhunter.response.LoginResponse;
+import vn.datk.jobhunter.domain.response.LoginResponse;
 import vn.datk.jobhunter.service.SecurityService;
 
 @RequestMapping(path = "${apiPrefix}/auth")
