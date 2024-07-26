@@ -10,6 +10,7 @@ import vn.datk.jobhunter.domain.User;
 import vn.datk.jobhunter.domain.response.MetaResponse;
 import vn.datk.jobhunter.domain.response.ResultPaginationResponse;
 import vn.datk.jobhunter.repository.UserRepository;
+import vn.datk.jobhunter.util.FormatResultPagaination;
 
 import java.util.List;
 
@@ -41,17 +42,8 @@ public class UserService {
 
     public ResultPaginationResponse getAllUser(Pageable pageable){
         Page<User> userPage = this.userRepository.findAll(pageable);
-        ResultPaginationResponse rs = new ResultPaginationResponse();
-        MetaResponse mr = new MetaResponse();
+        ResultPaginationResponse response = FormatResultPagaination.createPaginationResponse(userPage);
 
-        mr.setPage(userPage.getNumber() + 1);
-        mr.setPageSize(userPage.getSize());
-        mr.setPages(userPage.getTotalPages());
-        mr.setTotal(userPage.getNumberOfElements());
-
-        rs.setMeta(mr);
-        rs.setResult(userPage.getContent());
-
-        return rs;
+        return response;
     }
 }
