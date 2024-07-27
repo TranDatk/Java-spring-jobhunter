@@ -3,20 +3,15 @@ package vn.datk.jobhunter.controller;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.datk.jobhunter.domain.Company;
-import vn.datk.jobhunter.domain.User;
-import vn.datk.jobhunter.domain.response.ResultPaginationResponse;
+import vn.datk.jobhunter.domain.res.ResultPaginationResponse;
 import vn.datk.jobhunter.service.CompanyService;
 import vn.datk.jobhunter.util.annotation.ApiMessage;
-
-import java.util.List;
-import java.util.Optional;
 
 
 @RequestMapping(path = "${apiPrefix}/companies")

@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import vn.datk.jobhunter.domain.Company;
-import vn.datk.jobhunter.domain.response.ResultPaginationResponse;
+import vn.datk.jobhunter.domain.res.ResultPaginationResponse;
 import vn.datk.jobhunter.repository.CompanyRepository;
 import vn.datk.jobhunter.util.response.FormatResultPagaination;
 

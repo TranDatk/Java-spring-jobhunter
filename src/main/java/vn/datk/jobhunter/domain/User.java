@@ -1,4 +1,5 @@
 package vn.datk.jobhunter.domain;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -6,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import vn.datk.jobhunter.util.constant.GenderEnum;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,14 +15,19 @@ import java.util.Date;
 @Entity
 @Table(name="users")
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
+@JsonIgnoreProperties(value = { "refreshToken"}, allowGetters = true)
 public class User extends AbstractAuditingEntity<Long> {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name" ,length = 100, nullable = false)
+    @Column(name = "name" ,length = 100)
     @JsonProperty("name")
     private String name;
+
+    @Column(name = "age" ,length = 3)
+    @JsonProperty("age")
+    private int age;
 
     @Column(name = "phone_number" ,length = 20, nullable = false)
     @NotBlank(message = "Phone number is required")
@@ -44,9 +51,12 @@ public class User extends AbstractAuditingEntity<Long> {
     @NotNull(message = "Password cannot be null")
     private String password;
 
-    @Column(name = "is_active")
-    private boolean isActive;
+    @Column(name = "gender")
+    @JsonProperty("gender")
+    @Enumerated(EnumType.STRING)
+    private GenderEnum gender;
 
-    @Column(name = "date_of_birth")
-    private Date dateOfBirth;
+    @Column(name = "refresh_token")
+    @JsonProperty("refreshToken")
+    private Date refreshToken;
 }
