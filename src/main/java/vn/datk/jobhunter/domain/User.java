@@ -57,6 +57,6 @@ public class User extends AbstractAuditingEntity<Long> {
     private GenderEnum gender;
 
     @Column(name = "refresh_token", columnDefinition = "MEDIUMTEXT")
-    @JsonProperty("refreshToken")
+    @JsonProperty("refresh_token")
     private String refreshToken;
 }

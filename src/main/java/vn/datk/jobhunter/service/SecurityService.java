@@ -15,6 +15,7 @@ import vn.datk.jobhunter.domain.res.auth.LoginResponse;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,27 +35,18 @@ public class SecurityService {
     @Value("${datk.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
 
-    public String createAccessToken(Authentication authentication, LoginResponse loginResponse) {
+    public String createAccessToken(String email, LoginResponse loginResponse) {
         Instant now = Instant.now();
         Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS);
 
-        // Lấy các authorities từ Authentication
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        List<String> roles = authorities.stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-
-        // Lấy thông tin bổ sung từ principal (nếu có)
-        Object principal = authentication.getPrincipal();
-        String email = (principal instanceof UserDetails)
-                ? ((UserDetails) principal).getUsername()
-                : authentication.getName();
+        List<String> roles = new ArrayList<>();
+        roles.add("USER_ROLE");
 
         // @formatter:off
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)
                 .expiresAt(validity)
-                .subject(authentication.getName())
+                .subject(email)
                 .claim("roles", roles)
                 .claim("user", loginResponse.getUser())
                 .build();
@@ -63,27 +55,18 @@ public class SecurityService {
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
 
-    public String createRefreshToken(Authentication authentication, LoginResponse loginResponse) {
+    public String createRefreshToken(String email, LoginResponse loginResponse) {
         Instant now = Instant.now();
         Instant validity = now.plus(this.refreshTokenExpiration, ChronoUnit.SECONDS);
 
-        // Lấy các authorities từ Authentication
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        List<String> roles = authorities.stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-
-        // Lấy thông tin bổ sung từ principal (nếu có)
-        Object principal = authentication.getPrincipal();
-        String email = (principal instanceof UserDetails)
-                ? ((UserDetails) principal).getUsername()
-                : authentication.getName();
+        List<String> roles = new ArrayList<>();
+        roles.add("USER_ROLE");
 
         // @formatter:off
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)
                 .expiresAt(validity)
-                .subject(authentication.getName())
+                .subject(email)
                 .claim("roles", roles)
                 .claim("user", loginResponse.getUser())
                 .build();

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.datk.jobhunter.domain.User;
 import vn.datk.jobhunter.domain.dto.LoginDTO;
 import vn.datk.jobhunter.domain.res.auth.LoginResponse;
+import vn.datk.jobhunter.util.error.IdInvalidException;
 import vn.datk.jobhunter.util.security.SecurityUtils;
 import vn.datk.jobhunter.service.SecurityService;
 import vn.datk.jobhunter.service.UserService;
@@ -56,9 +57,9 @@ public class AuthController {
         }
 
         //set access token
-        loginResponse.setAccessToken(this.securityService.createAccessToken(authentication, loginResponse));
+        loginResponse.setAccessToken(this.securityService.createAccessToken(authentication.getName(), loginResponse));
         //create refresh token
-        String refreshToken = this.securityService.createRefreshToken(authentication, loginResponse);
+        String refreshToken = this.securityService.createRefreshToken(authentication.getName(), loginResponse);
         //update user
         this.userService.updateUserToken(refreshToken, loginDTO.getUsername());
         //set cookies
@@ -92,11 +93,63 @@ public class AuthController {
 
     @GetMapping("/refresh")
     @ApiMessage("Get user information")
-    public ResponseEntity<String> getRefreshToken(
+    public ResponseEntity<LoginResponse> getRefreshToken(
             @CookieValue("refresh_token") String refreshToken
-    ){
+    ) throws IdInvalidException {
         Jwt decodedToken = this.securityUtils.checkValidRefreshToken(refreshToken);
         String email = decodedToken.getSubject();
-        return ResponseEntity.ok().body(email);
+        User user = this.userService.getUserByRefreshTokenAndEmail(refreshToken, email);
+        if(user != null){
+            LoginResponse loginResponse = new LoginResponse();
+            LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin(
+                    user.getId(),
+                    user.getEmail(),
+                    user.getName()
+            );
+            loginResponse.setUser(userLogin);
+
+            //set access token
+            loginResponse.setAccessToken(this.securityService.createAccessToken(email, loginResponse));
+            //create refresh token
+            String new_refresh_token = this.securityService.createRefreshToken(email, loginResponse);
+            //update user
+            this.userService.updateUserToken(new_refresh_token, email);
+            //set cookies
+            ResponseCookie responseCookie = ResponseCookie
+                    .from("refresh_token", new_refresh_token)
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .maxAge(refreshTokenExpiration)
+                    .build();
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                    .body(loginResponse);
+        }else{
+            throw new IdInvalidException("Refresh token is not valid");
+        }
+    }
+
+    @PostMapping("/logout")
+    @ApiMessage("Logout user")
+    public ResponseEntity<Void> logout() throws IdInvalidException{
+        String email = SecurityUtils.getCurrentUserLogin().isPresent()
+                ? SecurityUtils.getCurrentUserLogin().get()
+                : "";
+        if(email.equals("")){
+            throw new IdInvalidException("Access token is not valid");
+        }
+        this.userService.updateUserToken(null, email);
+
+        ResponseCookie deleteSpringCookie = ResponseCookie
+                .from("refresh_token", null)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .build();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, deleteSpringCookie.toString())
+                .body(null);
     }
 }
