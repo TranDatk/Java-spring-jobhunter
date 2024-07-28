@@ -1,6 +1,5 @@
 package vn.datk.jobhunter.service;
 
-import com.nimbusds.jose.util.Base64;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -12,9 +11,8 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
+import vn.datk.jobhunter.domain.res.auth.LoginResponse;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
@@ -30,12 +28,15 @@ public class SecurityService {
     @Value("${datk.jwt.base64-secret}")
     private String jwtKey;
 
-    @Value("${datk.jwt.token-validity-in-seconds}")
-    private long jwtExpiration;
+    @Value("${datk.jwt.access-token-validity-in-seconds}")
+    private long accessTokenExpiration;
 
-    public String createToken(Authentication authentication) {
+    @Value("${datk.jwt.refresh-token-validity-in-seconds}")
+    private long refreshTokenExpiration;
+
+    public String createAccessToken(Authentication authentication, LoginResponse loginResponse) {
         Instant now = Instant.now();
-        Instant validity = now.plus(this.jwtExpiration, ChronoUnit.SECONDS);
+        Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS);
 
         // Lấy các authorities từ Authentication
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -45,7 +46,7 @@ public class SecurityService {
 
         // Lấy thông tin bổ sung từ principal (nếu có)
         Object principal = authentication.getPrincipal();
-        String username = (principal instanceof UserDetails)
+        String email = (principal instanceof UserDetails)
                 ? ((UserDetails) principal).getUsername()
                 : authentication.getName();
 
@@ -55,7 +56,36 @@ public class SecurityService {
                 .expiresAt(validity)
                 .subject(authentication.getName())
                 .claim("roles", roles)
-                .claim("email", username)
+                .claim("user", loginResponse.getUser())
+                .build();
+
+        JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
+        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
+    }
+
+    public String createRefreshToken(Authentication authentication, LoginResponse loginResponse) {
+        Instant now = Instant.now();
+        Instant validity = now.plus(this.refreshTokenExpiration, ChronoUnit.SECONDS);
+
+        // Lấy các authorities từ Authentication
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        List<String> roles = authorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        // Lấy thông tin bổ sung từ principal (nếu có)
+        Object principal = authentication.getPrincipal();
+        String email = (principal instanceof UserDetails)
+                ? ((UserDetails) principal).getUsername()
+                : authentication.getName();
+
+        // @formatter:off
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuedAt(now)
+                .expiresAt(validity)
+                .subject(authentication.getName())
+                .claim("roles", roles)
+                .claim("user", loginResponse.getUser())
                 .build();
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();

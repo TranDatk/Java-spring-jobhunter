@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import vn.datk.jobhunter.domain.RestResponse;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalException {
-    @ExceptionHandler(value = {UsernameNotFoundException.class, BadCredentialsException.class})
+    @ExceptionHandler(value = {UsernameNotFoundException.class, BadCredentialsException.class, ParseException.class})
     public ResponseEntity<Object> handleSecurityException(Exception ex){
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());

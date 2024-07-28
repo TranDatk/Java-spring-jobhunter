@@ -43,7 +43,10 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/api/v1/auth/login", "/").permitAll()
+                                .requestMatchers(
+                                        "/api/v1/auth/login",
+                                        "/",
+                                        "/api/v1/auth/refresh").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(
@@ -83,7 +86,7 @@ public class SecurityConfiguration {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new
                 JwtGrantedAuthoritiesConverter();
         grantedAuthoritiesConverter.setAuthorityPrefix("");
-        grantedAuthoritiesConverter.setAuthoritiesClaimName(jwtKey);
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
         JwtAuthenticationConverter jwtAuthenticationConverter = new
                 JwtAuthenticationConverter();
         

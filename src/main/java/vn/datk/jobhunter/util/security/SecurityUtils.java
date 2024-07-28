@@ -1,8 +1,11 @@
-package vn.datk.jobhunter.security;
+package vn.datk.jobhunter.util.security;
 
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import com.nimbusds.jose.util.Base64;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -10,9 +13,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.stereotype.Service;
+import vn.datk.jobhunter.service.SecurityService;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 
+@Service
 public class SecurityUtils {
+    @Value("${datk.jwt.base64-secret}")
+    private String jwtKey;
+
     /**
      * Get the login of the current user.
      *
@@ -95,4 +108,19 @@ public class SecurityUtils {
         return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority);
     }
 
+    public Jwt checkValidRefreshToken(String token){
+        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(
+                getSecretKey()).macAlgorithm(SecurityService.JWT_ALGORITHM).build();
+        try {
+            return jwtDecoder.decode(token);
+        } catch (Exception e) {
+            System.out.println(">>> JWT error: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    private SecretKey getSecretKey() {
+        byte[] keyBytes = Base64.from(jwtKey).decode();
+        return new SecretKeySpec(keyBytes, 0, keyBytes.length, SecurityService.JWT_ALGORITHM.getName());
+    }
 }

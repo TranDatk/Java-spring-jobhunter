@@ -56,7 +56,7 @@ public class User extends AbstractAuditingEntity<Long> {
     @Enumerated(EnumType.STRING)
     private GenderEnum gender;
 
-    @Column(name = "refresh_token")
+    @Column(name = "refresh_token", columnDefinition = "MEDIUMTEXT")
     @JsonProperty("refreshToken")
-    private Date refreshToken;
+    private String refreshToken;
 }
