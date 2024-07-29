@@ -7,8 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import vn.datk.jobhunter.domain.Company;
 import vn.datk.jobhunter.domain.User;
 import vn.datk.jobhunter.domain.dto.UpdateUserDTO;
+import vn.datk.jobhunter.domain.res.user.CompanyUser;
 import vn.datk.jobhunter.domain.res.user.CreatedUserResponse;
 import vn.datk.jobhunter.domain.res.ResultPaginationResponse;
 import vn.datk.jobhunter.domain.res.user.UpdatedUserResponse;
@@ -22,11 +24,17 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final CompanyService companyService;
     private final PasswordEncoder passwordEncoder;
 
     public CreatedUserResponse createUser(User user) throws Exception {
         String phoneNumber = user.getPhoneNumber();
         String email = user.getEmail();
+
+        if(user.getCompany() != null){
+            Company company = this.companyService.findCompanyById(user.getCompany().getId());
+            user.setCompany(company);
+        }
         if(userRepository.existsByPhoneNumber(phoneNumber)) {
             throw new DataIntegrityViolationException("Phone number already exists");
         }
@@ -37,14 +45,12 @@ public class UserService {
         String hashPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(hashPassword);
 
-        CreatedUserResponse res = this.convertToResCreatedUserRes(userRepository.save(user));
-
-        return res;
+        return this.convertToResCreatedUserRes(this.userRepository.save(user));
     }
 
     public CreatedUserResponse fetchUserById(Long id) throws Exception {
         if(userRepository.existsById(id)){
-            CreatedUserResponse res = this.convertToResCreatedUserRes(userRepository.findById(id).get());
+            CreatedUserResponse res = this.convertToResCreatedUserRes(this.userRepository.findById(id).get());
             return res;
         }else{
             throw new IdInvalidException("The specified User ID is invalid");
@@ -60,7 +66,7 @@ public class UserService {
     }
 
     public User handleGetUserByUsername(String username) {
-        return userRepository.findByEmail(username);
+        return this.userRepository.findByEmail(username);
     }
 
     public ResultPaginationResponse getAllUser(Pageable pageable, Specification<User> spec){
@@ -70,7 +76,7 @@ public class UserService {
         return response;
     }
 
-    public UpdatedUserResponse updateUser(Long id, UpdateUserDTO user) {
+    public UpdatedUserResponse updateUser(Long id, UpdateUserDTO user) throws IdInvalidException {
         Optional<User> userOptional = this.userRepository.findById(id);
         if(userOptional.isPresent()){
             User currentUser = userOptional.get();
@@ -78,6 +84,15 @@ public class UserService {
             currentUser.setGender(user.getGender());
             currentUser.setAge(user.getAge());
             currentUser.setAddress(user.getAddress());
+
+            if(user.getCompany() != null){
+                Company company = this.companyService.findCompanyById(user.getCompany().getId());
+                if(company == null){
+                    throw new IdInvalidException("Company Id is invalid");
+                }
+                user.setCompany(company);
+            }
+
             return this.convertToResUpdatedUserRes(this.userRepository.save(currentUser));
         }
         return null;
@@ -97,6 +112,8 @@ public class UserService {
 
     public CreatedUserResponse convertToResCreatedUserRes(User user){
         CreatedUserResponse res = new CreatedUserResponse();
+        CompanyUser companyUser = new CompanyUser();
+
         res.setId(user.getId());
         res.setEmail(user.getEmail());
         res.setAddress(user.getAddress());
@@ -105,17 +122,29 @@ public class UserService {
         res.setCreatedDate(user.getCreatedDate());
         res.setGender(user.getGender());
         res.setName(user.getName());
+
+        if(user.getCompany() != null){
+            companyUser.setId(user.getCompany().getId());
+            companyUser.setName(user.getCompany().getName());
+            res.setCompany(companyUser);
+        }
         return res;
     }
 
     public UpdatedUserResponse convertToResUpdatedUserRes(User user){
         UpdatedUserResponse res = new UpdatedUserResponse();
+        CompanyUser companyUser = new CompanyUser();
         res.setId(user.getId());
         res.setAddress(user.getAddress());
         res.setAge(user.getAge());
         res.setGender(user.getGender());
         res.setName(user.getName());
         res.setLastModifiedDate(user.getLastModifiedDate());
+        if(user.getCompany() != null){
+            companyUser.setId(user.getCompany().getId());
+            companyUser.setName(user.getCompany().getName());
+            res.setCompany(companyUser);
+        }
         return res;
     }
 }

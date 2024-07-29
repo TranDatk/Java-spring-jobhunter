@@ -24,6 +24,8 @@ public class UpdatedUserResponse {
 
     private GenderEnum gender;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
     private Instant lastModifiedDate;
+
+    private CompanyUser company;
 }

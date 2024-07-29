@@ -15,6 +15,7 @@ import vn.datk.jobhunter.domain.res.ResultPaginationResponse;
 import vn.datk.jobhunter.domain.res.user.UpdatedUserResponse;
 import vn.datk.jobhunter.service.UserService;
 import vn.datk.jobhunter.util.annotation.ApiMessage;
+import vn.datk.jobhunter.util.error.IdInvalidException;
 
 @RequestMapping(path = "${apiPrefix}/users")
 @RequiredArgsConstructor
@@ -52,7 +53,7 @@ public class UserController {
     public ResponseEntity<UpdatedUserResponse> updateUser(
             @PathVariable("id") Long id,
             @Valid @RequestBody UpdateUserDTO user
-    ){
+    ) throws IdInvalidException {
         return ResponseEntity.ok(this.userService.updateUser(id, user));
     }
 

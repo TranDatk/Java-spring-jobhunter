@@ -11,6 +11,7 @@ import vn.datk.jobhunter.util.constant.GenderEnum;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="users")
@@ -58,4 +59,8 @@ public class User extends AbstractAuditingEntity<Long> {
     @Column(name = "refresh_token", columnDefinition = "MEDIUMTEXT")
     @JsonProperty("refresh_token")
     private String refreshToken;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 }

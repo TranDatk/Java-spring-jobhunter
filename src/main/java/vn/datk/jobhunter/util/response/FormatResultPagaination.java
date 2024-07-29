@@ -2,6 +2,7 @@ package vn.datk.jobhunter.util.response;
 
 import org.springframework.data.domain.Page;
 import vn.datk.jobhunter.domain.User;
+import vn.datk.jobhunter.domain.res.user.CompanyUser;
 import vn.datk.jobhunter.domain.res.user.CreatedUserResponse;
 import vn.datk.jobhunter.domain.res.MetaResponse;
 import vn.datk.jobhunter.domain.res.ResultPaginationResponse;
@@ -46,7 +47,11 @@ public class FormatResultPagaination {
                         item.getEmail(),
                         item.getAddress(),
                         item.getGender(),
-                        item.getCreatedDate()
+                        item.getCreatedDate(),
+                        new CompanyUser(
+                                item.getCompany() != null ? item.getCompany().getId() : 0,
+                                item.getCompany() != null ? item.getCompany().getName() : null
+                        )
                 ))
                 .collect(Collectors.toList());
 

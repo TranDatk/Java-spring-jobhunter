@@ -1,4 +1,4 @@
-package vn.datk.jobhunter.domain;
+package vn.datk.jobhunter.domain.res;
 
 import lombok.Builder;
 import lombok.Data;
