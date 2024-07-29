@@ -19,4 +19,12 @@ public class LoginResponse {
         private String email;
         private String name;
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UserGetAccout {
+        private UserLogin user;
+    }
 }

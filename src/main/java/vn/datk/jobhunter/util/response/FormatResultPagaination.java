@@ -15,7 +15,7 @@ public class FormatResultPagaination {
         ResultPaginationResponse rs = new ResultPaginationResponse();
         MetaResponse mr = new MetaResponse();
 
-        mr.setPage(page.getNumber() + 1);
+        mr.setCurrent(page.getNumber() + 1);
         mr.setPageSize(page.getSize());
         mr.setPages(page.getTotalPages());
         mr.setTotal(page.getTotalElements());
@@ -30,7 +30,7 @@ public class FormatResultPagaination {
         ResultPaginationResponse rs = new ResultPaginationResponse();
         MetaResponse mr = new MetaResponse();
 
-        mr.setPage(page.getNumber() + 1);
+        mr.setCurrent(page.getNumber() + 1);
         mr.setPageSize(page.getSize());
         mr.setPages(page.getTotalPages());
         mr.setTotal(page.getTotalElements());

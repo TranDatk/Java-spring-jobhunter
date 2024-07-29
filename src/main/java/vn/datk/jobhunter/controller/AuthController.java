@@ -77,18 +77,20 @@ public class AuthController {
 
     @GetMapping("/account")
     @ApiMessage("Get user information")
-    public ResponseEntity<LoginResponse.UserLogin> getAccount(){
+    public ResponseEntity<LoginResponse.UserGetAccout> getAccount(){
         String email = SecurityUtils.getCurrentUserLogin().isPresent()
                 ? SecurityUtils.getCurrentUserLogin().get()
                 : "";
         User currentUserDB = this.userService.handleGetUserByUsername(email);
         LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin();
+        LoginResponse.UserGetAccout userGetAccout = new LoginResponse.UserGetAccout();
         if(currentUserDB != null){
             userLogin.setId(currentUserDB.getId());
             userLogin.setEmail(currentUserDB.getEmail());
             userLogin.setName(currentUserDB.getName());
+            userGetAccout.setUser(userLogin);
         }
-        return ResponseEntity.ok().body(userLogin);
+        return ResponseEntity.ok().body(userGetAccout);
     }
 
     @GetMapping("/refresh")

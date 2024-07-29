@@ -29,8 +29,7 @@ public class User extends AbstractAuditingEntity<Long> {
     @JsonProperty("age")
     private int age;
 
-    @Column(name = "phone_number" ,length = 20, nullable = false)
-    @NotBlank(message = "Phone number is required")
+    @Column(name = "phone_number" ,length = 20)
     @Size(min = 5, message = "Phone number must be at least 5 characters")
     @JsonProperty("phoneNumber")
     private String phoneNumber;
