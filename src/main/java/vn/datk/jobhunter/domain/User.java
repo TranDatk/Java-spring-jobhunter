@@ -23,11 +23,9 @@ public class User extends AbstractAuditingEntity<Long> {
     private Long id;
 
     @Column(name = "name" ,length = 100)
-    @JsonProperty("name")
     private String name;
 
     @Column(name = "age" ,length = 3)
-    @JsonProperty("age")
     private int age;
 
     @Column(name = "phone_number" ,length = 20)
@@ -39,11 +37,9 @@ public class User extends AbstractAuditingEntity<Long> {
     @NotBlank(message = "Email is required")
     @NotNull(message = "Email cannot be null")
     @Email(message="Please provide a valid email address")
-    @JsonProperty("email")
     private String email;
 
     @Column(name = "address" ,length = 200)
-    @JsonProperty("address")
     private String address;
 
     @Column(name = "password" ,length = 200)
@@ -51,8 +47,6 @@ public class User extends AbstractAuditingEntity<Long> {
     @NotNull(message = "Password cannot be null")
     private String password;
 
-    @Column(name = "gender")
-    @JsonProperty("gender")
     @Enumerated(EnumType.STRING)
     private GenderEnum gender;
 

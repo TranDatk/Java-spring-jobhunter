@@ -1,4 +1,4 @@
-package vn.datk.jobhunter.config;
+package vn.datk.jobhunter.util.security;
 
 import org.springframework.data.domain.AuditorAware;
 import vn.datk.jobhunter.util.security.SecurityUtils;
