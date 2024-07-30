@@ -2,8 +2,8 @@ package vn.datk.jobhunter.domain.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import vn.datk.jobhunter.domain.Company;
 import vn.datk.jobhunter.util.constant.GenderEnum;
+import vn.datk.jobhunter.domain.Company;
 
 
 @Getter
