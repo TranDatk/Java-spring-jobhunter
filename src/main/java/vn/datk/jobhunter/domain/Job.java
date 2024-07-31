@@ -3,10 +3,12 @@ package vn.datk.jobhunter.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import vn.datk.jobhunter.util.constant.LevelEnum;
 
+import java.time.Instant;
 import java.util.List;
 
 @Entity
@@ -17,12 +19,18 @@ public class Job extends AbstractAuditingEntity<Long>{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Name is required")
     private String name;
+
+    @NotBlank(message = "Location is required")
     private String location;
+
     private double salary;
     private int quantity;
     private LevelEnum level;
     private boolean active;
+    private Instant startDate;
+    private Instant endDate;
 
     @Column(columnDefinition = "MEDIUMTEXT")
     private String description;

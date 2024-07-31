@@ -2,6 +2,7 @@ package vn.datk.jobhunter.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,7 @@ public class Skill extends AbstractAuditingEntity<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Name is required")
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "skills")

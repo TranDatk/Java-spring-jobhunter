@@ -15,6 +15,7 @@ import vn.datk.jobhunter.domain.res.user.CreatedUserResponse;
 import vn.datk.jobhunter.domain.res.ResultPaginationResponse;
 import vn.datk.jobhunter.domain.res.user.UpdatedUserResponse;
 import vn.datk.jobhunter.repository.UserRepository;
+import vn.datk.jobhunter.util.convert.UserConvert;
 import vn.datk.jobhunter.util.error.IdInvalidException;
 import vn.datk.jobhunter.util.response.FormatResultPagaination;
 
@@ -45,12 +46,12 @@ public class UserService {
         String hashPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(hashPassword);
 
-        return this.convertToResCreatedUserRes(this.userRepository.save(user));
+        return UserConvert.convertToResCreatedUserRes(this.userRepository.save(user));
     }
 
     public CreatedUserResponse fetchUserById(Long id) throws Exception {
         if(userRepository.existsById(id)){
-            CreatedUserResponse res = this.convertToResCreatedUserRes(this.userRepository.findById(id).get());
+            CreatedUserResponse res = UserConvert.convertToResCreatedUserRes(this.userRepository.findById(id).get());
             return res;
         }else{
             throw new IdInvalidException("The specified User ID is invalid");
@@ -93,7 +94,7 @@ public class UserService {
                 user.setCompany(company);
             }
 
-            return this.convertToResUpdatedUserRes(this.userRepository.save(currentUser));
+            return UserConvert.convertToResUpdatedUserRes(this.userRepository.save(currentUser));
         }
         return null;
     }
@@ -108,43 +109,5 @@ public class UserService {
 
     public User getUserByRefreshTokenAndEmail(String token, String email){
         return this.userRepository.findByRefreshTokenAndEmail(token, email);
-    }
-
-    public CreatedUserResponse convertToResCreatedUserRes(User user){
-        CreatedUserResponse res = new CreatedUserResponse();
-        CompanyUser companyUser = new CompanyUser();
-
-        res.setId(user.getId());
-        res.setEmail(user.getEmail());
-        res.setAddress(user.getAddress());
-        res.setPhoneNumber(user.getPhoneNumber());
-        res.setAge(user.getAge());
-        res.setCreatedDate(user.getCreatedDate());
-        res.setGender(user.getGender());
-        res.setName(user.getName());
-
-        if(user.getCompany() != null){
-            companyUser.setId(user.getCompany().getId());
-            companyUser.setName(user.getCompany().getName());
-            res.setCompany(companyUser);
-        }
-        return res;
-    }
-
-    public UpdatedUserResponse convertToResUpdatedUserRes(User user){
-        UpdatedUserResponse res = new UpdatedUserResponse();
-        CompanyUser companyUser = new CompanyUser();
-        res.setId(user.getId());
-        res.setAddress(user.getAddress());
-        res.setAge(user.getAge());
-        res.setGender(user.getGender());
-        res.setName(user.getName());
-        res.setLastModifiedDate(user.getLastModifiedDate());
-        if(user.getCompany() != null){
-            companyUser.setId(user.getCompany().getId());
-            companyUser.setName(user.getCompany().getName());
-            res.setCompany(companyUser);
-        }
-        return res;
     }
 }
