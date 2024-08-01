@@ -46,17 +46,14 @@ public class SecurityConfiguration {
                                 .requestMatchers(
                                         "/api/v1/auth/login",
                                         "/",
-                                        "/api/v1/auth/refresh").permitAll()
+                                        "/api/v1/auth/refresh",
+                                        "/storage/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(
                         (oauth2) -> oauth2.jwt(Customizer.withDefaults())
                                 .authenticationEntryPoint(caep)
                 )
-//                .exceptionHandling(
-//                        exceptions -> exceptions
-//                                .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) //401
-//                                .accessDeniedHandler(new BearerTokenAccessDeniedHandler())) //403
                 .formLogin(f -> f.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
