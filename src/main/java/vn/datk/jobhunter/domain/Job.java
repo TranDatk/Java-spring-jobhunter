@@ -26,10 +26,16 @@ public class Job extends AbstractAuditingEntity<Long>{
     private String location;
 
     private double salary;
+
     private int quantity;
+
+    @Enumerated(EnumType.STRING)
     private LevelEnum level;
+
     private boolean active;
+
     private Instant startDate;
+
     private Instant endDate;
 
     @Column(columnDefinition = "MEDIUMTEXT")
@@ -44,4 +50,8 @@ public class Job extends AbstractAuditingEntity<Long>{
     @JoinTable(name = "job_skill", joinColumns = @JoinColumn(name = "job_id"),
     inverseJoinColumns = @JoinColumn(name="skill_id"))
     private List<Skill> skills;
+
+    @OneToMany(mappedBy = "job", fetch = FetchType.LAZY)
+    @JsonIgnore
+    List<Resume> resumes;
 }

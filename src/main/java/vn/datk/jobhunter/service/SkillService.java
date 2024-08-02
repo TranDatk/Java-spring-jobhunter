@@ -30,20 +30,17 @@ public class SkillService {
         if(this.skillRepository.existsById(id)){
             return this.skillRepository.findById(id).get();
         }else{
-            throw new IdInvalidException("The specified User ID is invalid");
+            throw new IdInvalidException("The specified Skill ID is invalid");
         }
     }
 
     public Skill update(Skill skill) throws Exception{
         Skill currentSkill = this.fetchSkillById(skill.getId());
-        if(currentSkill == null){
-            throw new IdInvalidException("Skill ID is not found");
-        }
         if(skill.getName() != null && this.skillRepository.existsByName(skill.getName())){
             throw new DataIntegrityViolationException("Skill name already exists");
         }
         currentSkill.setName(skill.getName());
-        return this.skillRepository.save(skill);
+        return this.skillRepository.save(currentSkill);
     }
 
     public ResultPaginationResponse fetchAllSkill(Specification<Skill> spec, Pageable pageable){

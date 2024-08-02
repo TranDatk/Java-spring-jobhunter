@@ -17,6 +17,7 @@ import vn.datk.jobhunter.util.annotation.ApiMessage;
 
 @RequestMapping(path = "${apiPrefix}/jobs")
 @RequiredArgsConstructor
+@RestController
 public class JobController {
     private final JobService jobService;
 
