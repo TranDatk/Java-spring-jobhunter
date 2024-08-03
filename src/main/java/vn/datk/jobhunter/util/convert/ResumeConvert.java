@@ -42,6 +42,10 @@ public class ResumeConvert {
         res.setCreatedDate(resume.getCreatedDate());
         res.setCreatedBy(resume.getCreatedBy());
 
+        if(resume.getJob() != null){
+            res.setCompanyName(resume.getJob().getCompany().getName());
+        }
+
         res.setUser(new FetchResumeResponse.UserResume(resume.getUser().getId(), resume.getUser().getName()));
         res.setJob(new FetchResumeResponse.JobResume(resume.getJob().getId(), resume.getJob().getName()));
         return res;

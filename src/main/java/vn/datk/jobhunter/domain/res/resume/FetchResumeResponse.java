@@ -31,6 +31,7 @@ public class FetchResumeResponse {
     private Instant lastModifiedDate;
     private String lastModifiedBy;
     private String createdBy;
+    private String companyName;
 
     private UserResume user;
     private JobResume job;

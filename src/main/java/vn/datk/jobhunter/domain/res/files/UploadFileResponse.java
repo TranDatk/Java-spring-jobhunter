@@ -12,6 +12,6 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UploadFileResponse {
-    private String name;
+    private String fileName;
     private Instant uploadedAt;
 }

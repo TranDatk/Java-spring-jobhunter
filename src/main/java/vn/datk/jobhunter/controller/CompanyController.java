@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.datk.jobhunter.domain.Company;
+import vn.datk.jobhunter.domain.Job;
 import vn.datk.jobhunter.domain.res.ResultPaginationResponse;
 import vn.datk.jobhunter.service.CompanyService;
 import vn.datk.jobhunter.util.annotation.ApiMessage;
@@ -37,13 +38,12 @@ public class CompanyController {
                 .body(this.companyService.getAllCompany(pageable, spec));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("")
     @ApiMessage("Update a company")
     public ResponseEntity<Company> updateCompany(
-            @PathVariable("id") Long id,
             @Valid @RequestBody Company company
     ){
-        return ResponseEntity.ok(this.companyService.updateCompany(id, company));
+        return ResponseEntity.ok(this.companyService.updateCompany(company));
     }
 
     @DeleteMapping("/{id}")
@@ -53,5 +53,11 @@ public class CompanyController {
     ){
         this.companyService.deleteCompany(id);
         return ResponseEntity.ok(null);
+    }
+
+    @GetMapping("/{id}")
+    @ApiMessage("Get company by id")
+    public ResponseEntity<Company> getCompany(@PathVariable("id") Long id) throws Exception{
+        return ResponseEntity.ok().body(this.companyService.findCompanyById(id));
     }
 }

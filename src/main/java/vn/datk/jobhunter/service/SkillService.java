@@ -20,7 +20,7 @@ public class SkillService {
     private final SkillRepository skillRepository;
 
     public Skill create(Skill skill) throws Exception{
-        if(!this.skillRepository.existsByName(skill.getName())){
+        if(this.skillRepository.existsByName(skill.getName())){
             throw new DataIntegrityViolationException("Skill name already exists");
         }
         return this.skillRepository.save(skill);

@@ -36,8 +36,8 @@ public class CompanyService {
         return companyOptional.orElse(null);
     }
 
-    public Company updateCompany(Long id, Company company){
-        Optional<Company> companyOptional = this.companyRepository.findById(id);
+    public Company updateCompany(Company company){
+        Optional<Company> companyOptional = this.companyRepository.findById(company.getId());
         if(companyOptional.isPresent()){
             Company currentCompany = companyOptional.get();
             currentCompany.setName(company.getName());
