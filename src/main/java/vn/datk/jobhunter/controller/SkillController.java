@@ -29,7 +29,7 @@ public class SkillController {
     @PutMapping("")
     @ApiMessage("Update a skill")
     public ResponseEntity<Skill> update(@Valid @RequestBody Skill skill) throws Exception {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.skillService.update(skill));
+        return ResponseEntity.status(HttpStatus.OK).body(this.skillService.update(skill));
     }
 
     @GetMapping("")
