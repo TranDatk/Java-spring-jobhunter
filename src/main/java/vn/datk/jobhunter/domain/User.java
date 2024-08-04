@@ -62,4 +62,8 @@ public class User extends AbstractAuditingEntity<Long> {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonIgnore
     List<Resume> resumes;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 }

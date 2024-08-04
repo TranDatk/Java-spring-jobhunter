@@ -51,19 +51,12 @@ public class RoleService {
     }
 
     public Role update(Role role) throws Exception{
-
         Role currentRole = this.fetchRoleById(role.getId());
-
-        if(this.roleRepository.existsByName(
-               role.getName()
-        )){
-            throw new DataIntegrityViolationException("Role already exists");
-        }
 
         if(role.getPermissions() != null){
             List<Long> reqPermissions = role.getPermissions()
                     .stream().map(
-                            permission -> permission.getId()
+                            Permission::getId
                     ).collect(Collectors.toList());
             List<Permission> dbPermissions = this.permissionRepository.findByIdIn(reqPermissions);
             role.setPermissions(dbPermissions);

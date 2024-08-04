@@ -53,7 +53,7 @@ public class UserController {
     public ResponseEntity<UpdatedUserResponse> updateUser(
             @PathVariable("id") Long id,
             @Valid @RequestBody UpdateUserDTO user
-    ) throws IdInvalidException {
+    ) throws Exception {
         return ResponseEntity.ok(this.userService.updateUser(id, user));
     }
 

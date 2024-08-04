@@ -28,4 +28,6 @@ public class UpdatedUserResponse {
     private Instant lastModifiedDate;
 
     private CompanyUser company;
+
+    private RoleUser role;
 }

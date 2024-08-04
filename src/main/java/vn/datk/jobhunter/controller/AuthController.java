@@ -51,7 +51,8 @@ public class AuthController {
             LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin(
                     currentUserDB.getId(),
                     currentUserDB.getEmail(),
-                    currentUserDB.getName()
+                    currentUserDB.getName(),
+                    currentUserDB.getRole()
             );
             loginResponse.setUser(userLogin);
         }
@@ -88,6 +89,7 @@ public class AuthController {
             userLogin.setId(currentUserDB.getId());
             userLogin.setEmail(currentUserDB.getEmail());
             userLogin.setName(currentUserDB.getName());
+            userLogin.setRole(currentUserDB.getRole());
             userGetAccout.setUser(userLogin);
         }
         return ResponseEntity.ok().body(userGetAccout);
@@ -106,7 +108,8 @@ public class AuthController {
             LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin(
                     user.getId(),
                     user.getEmail(),
-                    user.getName()
+                    user.getName(),
+                    user.getRole()
             );
             loginResponse.setUser(userLogin);
 

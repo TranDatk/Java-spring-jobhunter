@@ -31,4 +31,6 @@ public class CreatedUserResponse {
     private Instant createdDate;
 
     private CompanyUser company;
+
+    private RoleUser role;
 }

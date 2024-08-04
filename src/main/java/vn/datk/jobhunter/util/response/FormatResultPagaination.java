@@ -10,6 +10,7 @@ import vn.datk.jobhunter.domain.res.MetaResponse;
 import vn.datk.jobhunter.domain.res.ResultPaginationResponse;
 import vn.datk.jobhunter.domain.res.user.UpdatedUserResponse;
 import vn.datk.jobhunter.util.convert.ResumeConvert;
+import vn.datk.jobhunter.util.convert.UserConvert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,22 +44,8 @@ public class FormatResultPagaination {
         rs.setMeta(mr);
 
         List<CreatedUserResponse> listUser = page.getContent()
-                .stream().map(item -> new CreatedUserResponse(
-                        item.getId(),
-                        item.getName(),
-                        item.getAge(),
-                        item.getPhoneNumber(),
-                        item.getEmail(),
-                        item.getAddress(),
-                        item.getGender(),
-                        item.getCreatedDate(),
-                        new CompanyUser(
-                                item.getCompany() != null ? item.getCompany().getId() : 0,
-                                item.getCompany() != null ? item.getCompany().getName() : null
-                        )
-                ))
+                .stream().map(UserConvert::convertToResCreatedUserRes)
                 .collect(Collectors.toList());
-
 
         rs.setResult(listUser);
 

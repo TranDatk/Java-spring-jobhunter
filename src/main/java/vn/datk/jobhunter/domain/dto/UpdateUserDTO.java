@@ -2,6 +2,7 @@ package vn.datk.jobhunter.domain.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import vn.datk.jobhunter.domain.Role;
 import vn.datk.jobhunter.util.constant.GenderEnum;
 import vn.datk.jobhunter.domain.Company;
 
@@ -20,4 +21,6 @@ public class UpdateUserDTO {
     private GenderEnum gender;
 
     private Company company;
+
+    private Role role;
 }

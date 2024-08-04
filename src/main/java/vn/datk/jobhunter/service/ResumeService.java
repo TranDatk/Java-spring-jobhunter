@@ -1,5 +1,9 @@
 package vn.datk.jobhunter.service;
 
+import com.turkraft.springfilter.converter.FilterSpecification;
+import com.turkraft.springfilter.converter.FilterSpecificationConverter;
+import com.turkraft.springfilter.parser.FilterParser;
+import com.turkraft.springfilter.parser.node.FilterNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -19,6 +23,7 @@ import vn.datk.jobhunter.repository.UserRepository;
 import vn.datk.jobhunter.util.convert.ResumeConvert;
 import vn.datk.jobhunter.util.error.IdInvalidException;
 import vn.datk.jobhunter.util.response.FormatResultPagaination;
+import vn.datk.jobhunter.util.security.SecurityUtils;
 
 import java.util.Optional;
 
@@ -28,6 +33,8 @@ public class ResumeService {
     private final ResumeRepository resumeRepository;
     private final UserRepository userRepository;
     private final JobRepository jobRepository;
+    private final FilterParser filterParser;
+    private final FilterSpecificationConverter filterSpecificationConverter;
 
     public CreatedResumeResponse create(Resume resume) throws Exception{
         if(!this.checkResumeExistByUserAndJob(resume)){
@@ -62,6 +69,17 @@ public class ResumeService {
         Page<Resume> resumePage = this.resumeRepository.findAll(spec, pageable);
         ResultPaginationResponse response = FormatResultPagaination.createPaginateResumeRes(resumePage);
         return response;
+    }
+
+    public ResultPaginationResponse fetchResumeByUser(Pageable pageable){
+        String email = SecurityUtils.getCurrentUserLogin().isPresent()
+                ? SecurityUtils.getCurrentUserLogin().get()
+                : "";
+        FilterNode node = filterParser.parse("email='" + email + "'");
+        FilterSpecification<Resume> spec = filterSpecificationConverter.convert(node);
+
+        Page<Resume> resumePage = this.resumeRepository.findAll(spec, pageable);
+        return FormatResultPagaination.createPaginateResumeRes(resumePage);
     }
 
     private boolean checkResumeExistByUserAndJob(Resume resume){

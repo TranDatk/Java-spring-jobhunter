@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.datk.jobhunter.domain.Company;
+import vn.datk.jobhunter.domain.Role;
 import vn.datk.jobhunter.domain.User;
 import vn.datk.jobhunter.domain.dto.UpdateUserDTO;
 import vn.datk.jobhunter.domain.res.user.CompanyUser;
@@ -27,6 +28,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final CompanyService companyService;
     private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
 
     public CreatedUserResponse createUser(User user) throws Exception {
         String phoneNumber = user.getPhoneNumber();
@@ -43,6 +45,11 @@ public class UserService {
             throw new DataIntegrityViolationException("Email already exists");
         }
 
+        if(user.getRole() != null){
+            Role role = this.roleService.fetchRoleById(user.getRole().getId());
+            user.setRole(role);
+        }
+
         String hashPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(hashPassword);
 
@@ -51,8 +58,7 @@ public class UserService {
 
     public CreatedUserResponse fetchUserById(Long id) throws Exception {
         if(userRepository.existsById(id)){
-            CreatedUserResponse res = UserConvert.convertToResCreatedUserRes(this.userRepository.findById(id).get());
-            return res;
+            return UserConvert.convertToResCreatedUserRes(this.userRepository.findById(id).get());
         }else{
             throw new IdInvalidException("The specified User ID is invalid");
         }
@@ -72,12 +78,11 @@ public class UserService {
 
     public ResultPaginationResponse getAllUser(Pageable pageable, Specification<User> spec){
         Page<User> userPage = this.userRepository.findAll(spec, pageable);
-        ResultPaginationResponse response = FormatResultPagaination.createPaginateUserRes(userPage);
 
-        return response;
+        return FormatResultPagaination.createPaginateUserRes(userPage);
     }
 
-    public UpdatedUserResponse updateUser(Long id, UpdateUserDTO user) throws IdInvalidException {
+    public UpdatedUserResponse updateUser(Long id, UpdateUserDTO user) throws Exception {
         Optional<User> userOptional = this.userRepository.findById(id);
         if(userOptional.isPresent()){
             User currentUser = userOptional.get();
@@ -91,7 +96,12 @@ public class UserService {
                 if(company == null){
                     throw new IdInvalidException("Company Id is invalid");
                 }
-                user.setCompany(company);
+                currentUser.setCompany(company);
+            }
+
+            if(user.getRole() != null){
+                Role role = this.roleService.fetchRoleById(user.getRole().getId());
+                user.setRole(role);
             }
 
             return UserConvert.convertToResUpdatedUserRes(this.userRepository.save(currentUser));
