@@ -11,6 +11,7 @@ import vn.datk.jobhunter.domain.Role;
 import vn.datk.jobhunter.domain.User;
 import vn.datk.jobhunter.service.UserService;
 import vn.datk.jobhunter.util.error.IdInvalidException;
+import vn.datk.jobhunter.util.error.PermissionException;
 import vn.datk.jobhunter.util.security.SecurityUtils;
 
 import java.util.List;
@@ -44,10 +45,10 @@ public class PermissionInterceptor implements HandlerInterceptor {
                                             permission.getMethod().equals(httpMethod)
                     );
                     if(!isAllow){
-                        throw new IdInvalidException("You do not have permission to access this endpoint!!!");
+                        throw new PermissionException("You do not have permission to access this endpoint!!!");
                     }
                 }else{
-                    throw new IdInvalidException("You do not have permission to access this endpoint!!!");
+                    throw new PermissionException("You do not have permission to access this endpoint!!!");
                 }
             }
         }
