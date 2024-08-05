@@ -47,7 +47,8 @@ public class SecurityConfiguration {
                 "/storage/**",
                 "/api/v1/companies/**",
                 "/api/v1/jobs/**",
-                "/api/v1/skills/**"
+                "/api/v1/skills/**",
+                "/api/v1/files/**"
         };
 
         http
@@ -59,6 +60,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.GET, "/api/v1/companies/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/jobs/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/skills/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/v1/files/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(
