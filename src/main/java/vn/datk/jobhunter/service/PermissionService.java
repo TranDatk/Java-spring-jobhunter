@@ -41,7 +41,6 @@ public class PermissionService {
     }
 
     public Permission update(Permission permission) throws Exception{
-
         Permission currentPermission = this.fetchPermissionById(permission.getId());
 
         if(this.permissionRepository.existsByModuleAndApiPathAndMethod(
@@ -50,6 +49,10 @@ public class PermissionService {
                 permission.getMethod()
         )){
             throw new DataIntegrityViolationException("Permission already exists");
+        }
+
+        if(this.permissionRepository.existsByName(permission.getName())){
+            throw new DataIntegrityViolationException("Permission name already exists");
         }
 
         currentPermission.setApiPath(permission.getApiPath());

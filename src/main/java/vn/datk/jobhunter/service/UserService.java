@@ -31,16 +31,13 @@ public class UserService {
     private final RoleService roleService;
 
     public CreatedUserResponse createUser(User user) throws Exception {
-        String phoneNumber = user.getPhoneNumber();
         String email = user.getEmail();
 
         if(user.getCompany() != null){
             Company company = this.companyService.findCompanyById(user.getCompany().getId());
             user.setCompany(company);
         }
-        if(userRepository.existsByPhoneNumber(phoneNumber)) {
-            throw new DataIntegrityViolationException("Phone number already exists");
-        }
+
         if(userRepository.existsByEmail(email)) {
             throw new DataIntegrityViolationException("Email already exists");
         }

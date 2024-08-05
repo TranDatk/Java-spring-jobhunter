@@ -15,7 +15,6 @@ public class UserConvert {
         res.setId(user.getId());
         res.setEmail(user.getEmail());
         res.setAddress(user.getAddress());
-        res.setPhoneNumber(user.getPhoneNumber());
         res.setAge(user.getAge());
         res.setCreatedDate(user.getCreatedDate());
         res.setGender(user.getGender());

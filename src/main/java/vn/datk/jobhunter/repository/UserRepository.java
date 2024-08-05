@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
-    boolean existsByPhoneNumber(String phoneNumber);
     boolean existsByEmail(String email);
     User findByEmail(String email);
     User findByRefreshTokenAndEmail(String token,String email);

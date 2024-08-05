@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import vn.datk.jobhunter.domain.Permission;
 import vn.datk.jobhunter.domain.Role;
 import vn.datk.jobhunter.domain.res.ResultPaginationResponse;
+import vn.datk.jobhunter.domain.res.resume.FetchResumeResponse;
 import vn.datk.jobhunter.service.RoleService;
 import vn.datk.jobhunter.util.annotation.ApiMessage;
+import vn.datk.jobhunter.util.convert.ResumeConvert;
 
 @RequestMapping(path = "${apiPrefix}/roles")
 @RestController
@@ -41,6 +43,12 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.roleService.fetchAll(spec, pageable)
         );
+    }
+
+    @GetMapping("/{id}")
+    @ApiMessage("Fetch a role by id")
+    public ResponseEntity<Role> fetchById(@PathVariable("id") Long id) throws Exception {
+        return ResponseEntity.status(HttpStatus.OK).body(this.roleService.fetchRoleById(id));
     }
 
     @DeleteMapping("/{id}")

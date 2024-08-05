@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import vn.datk.jobhunter.domain.Permission;
+import vn.datk.jobhunter.domain.Resume;
 import vn.datk.jobhunter.domain.Role;
 import vn.datk.jobhunter.domain.res.ResultPaginationResponse;
 import vn.datk.jobhunter.repository.PermissionRepository;

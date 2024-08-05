@@ -1,8 +1,10 @@
 package vn.datk.jobhunter.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.datk.jobhunter.domain.User;
 import vn.datk.jobhunter.domain.dto.LoginDTO;
 import vn.datk.jobhunter.domain.res.auth.LoginResponse;
+import vn.datk.jobhunter.domain.res.user.CreatedUserResponse;
 import vn.datk.jobhunter.util.error.IdInvalidException;
 import vn.datk.jobhunter.util.security.SecurityUtils;
 import vn.datk.jobhunter.service.SecurityService;
@@ -31,6 +34,13 @@ public class AuthController {
 
     @Value("${datk.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
+
+    @PostMapping("/register")
+    @ApiMessage("Register a new user")
+    public ResponseEntity<CreatedUserResponse> createUser(@Valid @RequestBody User user) throws Exception {
+        CreatedUserResponse newUser = this.userService.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+    }
 
     @PostMapping(path = "/login")
     @ApiMessage("Login by credential")
@@ -69,7 +79,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
-                .maxAge(refreshTokenExpiration)
+                .maxAge(this.refreshTokenExpiration)
                 .build();
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
