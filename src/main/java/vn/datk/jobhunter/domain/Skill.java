@@ -22,4 +22,8 @@ public class Skill extends AbstractAuditingEntity<Long> {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "skills")
     @JsonIgnore
     private List<Job> jobs;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "skills")
+    @JsonIgnore
+    private List<Subscriber> subscribers;
 }
